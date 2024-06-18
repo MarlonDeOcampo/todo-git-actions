@@ -4,10 +4,12 @@ on:
     branches: [ "dev" ]
   pull_request:
     branches: [ "dev" ]
+
 jobs:
   deploy:
     name: build && push image to docker hub
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v3
         with:
@@ -34,5 +36,5 @@ jobs:
           file: Dockerfile
           push: true
           tags: |
-            ${{ secrets.DOCKER_HUB_USERNAME }}/todo-app:latest
-            ${{ secrets.DOCKER_HUB_USERNAME }}/todo-app:${{ github.ref_name }}-${{ env.GIT_SHA }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/todo-app:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/todo-app:${{ github.ref_name }}-${{ env.GIT_SHA }}
