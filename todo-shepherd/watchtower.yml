@@ -1,30 +1,26 @@
 version: "3.8"
 
 networks:
-  watchtower_net:
+  todo_net:
     driver: overlay
-
-secrets:
-  shepherd-registries-auth:
+  registry_registry-net:
     external: true
 
 services:
   todo_list:
-    image: alhon05/todo-app:latest
+    image: 172.24.31.39:5000/alhon05/todo-app:latest
     deploy:
       labels: 
-        - com.mydomain.autodeploy
-        - shepherd.auth.config=todo
         - shepherd.enable=true
 
     ports:
       - "5173:5173"
     networks: 
-      - watchtower_net
+      - todo_net
+      - registry_registry-net
 
   shepherd:
-    build: .
-    image: containrrr/shepherd
+    image: containrrr/shepherd:latest
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     environment:
@@ -32,20 +28,18 @@ services:
       - IGNORELIST_SERVICES=shepherd
       - IMAGE_AUTOCLEAN_LIMIT=5
       - ROLLBACK_ON_FAILURE=true
-      - WITH_REGISTRY_AUTH=true
       - UPDATE_OPTIONS=--update-delay=30s --force
       - ROLLBACK_OPTIONS='--rollback-delay=0s'
       - VERBOSE=true
-      - FILTER_SERVICES=label=com.mydomain.autodeploy
+      - FILTER_SERVICES=label=shepherd.enable=true
       - TZ=Asia/Manila
+      - WITH_INSECURE_REGISTRY=true
 
-    # entrypoint: ["/bin/sh", "-c", "/entrypoint.sh shepherd"]
-    secrets:
-      - shepherd-registries-auth
+    networks: 
+      - todo_net
+      - registry_registry-net
 
     deploy:
       placement:
         constraints:
           - node.role == manager
-    networks: 
-      - watchtower_net
