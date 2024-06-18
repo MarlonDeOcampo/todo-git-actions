@@ -21,6 +21,10 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Extract Git Commit SHA
+        id: vars
+        run: echo "GIT_SHA=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
       
       - name: build and push api
         id: build-push-api
@@ -29,4 +33,6 @@ jobs:
           context: .
           file: Dockerfile
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/todo-app:v1
+          tags: |
+            ${{ secrets.DOCKER_HUB_USERNAME }}/todo-app:latest
+            ${{ secrets.DOCKER_HUB_USERNAME }}/todo-app:${{ github.ref_name }}-${{ env.GIT_SHA }}

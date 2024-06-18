@@ -5,8 +5,19 @@ networks:
 
 services:
   todo-list:
-    image: todoapp:v2
+    image: alhon05/todo-app:latest
     ports:
       - "5173:5173"
+    networks: 
+      - todonet
+
+  watchtower:
+    container_name: watchtower
+    image: containrrr/watchtower
+    environment:
+      - WATCHTOWER_CLEANUP=true
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: --interval 30 express_starter
     networks: 
       - todonet
