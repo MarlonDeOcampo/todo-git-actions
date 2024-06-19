@@ -12,8 +12,6 @@ services:
     deploy:
       labels:
         - "com.centurylinklabs.watchtower.enable=true"
-    environment:
-      - TZ=UTC
     networks: 
       - todonet
 
@@ -27,5 +25,3 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     command: --interval 30 --debug --label-enable
-    networks: 
-      - todonet
