@@ -25,7 +25,8 @@ services:
       - ROLLBACK_ON_FAILURE=true
       - REGISTRY_USER=alhon05
       - REGISTRY_PASSWORD=frilene040600
-      - FILTER_SERVICES=name="label=com.mydomain.autodeploy"
+      - FILTER_SERVICES=name=todo_list
+      - WITH_REGISTRY_AUTH=true
 
     deploy:
       placement:
