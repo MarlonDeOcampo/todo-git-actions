@@ -1,8 +1,8 @@
 version: "3.8"
 
 networks:
-  todonet:
-    driver: overlay
+  watcher_watchtower_net:
+    external: true
 
 services:
   todo_list:
@@ -13,18 +13,4 @@ services:
       labels:
         - "com.centurylinklabs.watchtower.enable=true"
     networks: 
-      - todonet
-
-  watchtower:
-    container_name: watchtower
-    image: containrrr/watchtower:1.7.1
-    deploy:
-      mode: global
-    environment:
-      - WATCHTOWER_CLEANUP=true
-      - WATCHTOWER_LABEL_ENABLE=true
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    command: --interval 30 todo_list --debug
-    networks: 
-      - todonet
+      - watcher_watchtower_net

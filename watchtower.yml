@@ -1,0 +1,22 @@
+version: "3.8"
+
+networks:
+  watchtower_net:
+    driver: overlay
+    
+services:
+  watchtower:
+    container_name: watchtower
+    image: containrrr/watchtower:1.7.1
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+    environment:
+      - WATCHTOWER_CLEANUP=true
+      # - WATCHTOWER_LABEL_ENABLE=true
+      # - WATCHTOWER_CONTAINERS=todo_list
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: --interval 30 --label-enable --debug 
+    networks: 
+      - watchtower_net
