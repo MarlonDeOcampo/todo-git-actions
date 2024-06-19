@@ -16,6 +16,7 @@ services:
     image: containrrr/watchtower
     environment:
       - WATCHTOWER_CLEANUP=true
+      - WATCHTOWER_CONTAINERS=todo_list
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     command: --interval 30 todo_list
