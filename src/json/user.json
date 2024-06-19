@@ -3,18 +3,18 @@
     "userId": 1,
     "userName": "admin",
     "email": "admin@yopmail.com",
-    "password": "admin1234"
+    "password": "supersecretpass"
   },
   {
     "userId": 2,
     "userName": "markgalbez",
     "email": "markgalbez@yopmail.com",
-    "password": "markgalbez1234"
+    "password": "supersecretpass"
   },
   {
     "userId": 3,
     "userName": "jason",
     "email": "jason@yopmail.com",
-    "password": "jason1234"
+    "password": "supersecretpass"
   }
 ]
