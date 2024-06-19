@@ -1,16 +1,30 @@
 version: "3.8"
 
 networks:
-  watcher_watchtower_net:
-    external: true
+  todonet:
 
 services:
   todo_list:
+    container_name: todo_list
     image: alhon05/todo-app:latest
     ports:
       - "5173:5173"
-    deploy:
-      labels:
-        - "com.centurylinklabs.watchtower.enable=true"
     networks: 
-      - watcher_watchtower_net
+      - todonet
+
+  watchtower:
+    image: containrrr/shepherd
+    deploy:
+      placement:
+        constraints:
+          - node.role == manager
+    environment:
+      - SLEEP_TIME=1m
+      - IGNORELIST_SERVICES="watchtower"
+      - UPDATE_OPTIONS="--update-delay=30s"
+      - ROLLBACK_ON_FAILURE=true
+      - IMAGE_AUTOCLEAN_LIMIT=2
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks: 
+      - todonet

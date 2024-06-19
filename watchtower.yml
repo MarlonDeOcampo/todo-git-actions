@@ -3,20 +3,33 @@ version: "3.8"
 networks:
   watchtower_net:
     driver: overlay
-    
+
 services:
-  watchtower:
-    container_name: watchtower
-    image: containrrr/watchtower:1.7.1
-    deploy:
-      placement:
-        constraints: [node.role == manager]
-    environment:
-      - WATCHTOWER_CLEANUP=true
-      # - WATCHTOWER_LABEL_ENABLE=true
-      # - WATCHTOWER_CONTAINERS=todo_list
+  todo_list:
+    image: alhon05/todo-app:latest
+    ports:
+      - "5173:5173"
+    networks: 
+      - watchtower_net
+
+  shepherd:
+    build: .
+    image: containrrr/shepherd
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-    command: --interval 30 --label-enable --debug 
+    environment:
+      - SLEEP_TIME=1m
+      - IGNORELIST_SERVICES="shepherd"
+      - IMAGE_AUTOCLEAN_LIMIT=5
+      - UPDATE_OPTIONS="--update-delay=30s"
+      - ROLLBACK_ON_FAILURE=true
+      - REGISTRY_USER=alhon05
+      - REGISTRY_PASSWORD=frilene040600
+      - FILTER_SERVICES=name="label=com.mydomain.autodeploy"
+
+    deploy:
+      placement:
+        constraints:
+          - node.role == manager
     networks: 
       - watchtower_net
