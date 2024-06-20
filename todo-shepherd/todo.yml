@@ -21,9 +21,11 @@ services:
     environment:
       - SLEEP_TIME=1m
       - IGNORELIST_SERVICES="watchtower"
+      - FILTER_SERVICES="label=com.mydomain.autodeploy"
       - UPDATE_OPTIONS="--update-delay=30s"
       - ROLLBACK_ON_FAILURE=true
       - IMAGE_AUTOCLEAN_LIMIT=2
+      - TZ=Asia/Manila
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     networks: 

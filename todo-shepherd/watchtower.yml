@@ -5,14 +5,18 @@ networks:
     driver: overlay
 
 secrets:
-  registry_user:
-    external: true
-  registry_password:
+  shepherd-registries-auth:
     external: true
 
 services:
   todo_list:
     image: alhon05/todo-app:latest
+    deploy:
+      labels: 
+        - com.mydomain.autodeploy
+        - shepherd.auth.config=todo
+        - shepherd.enable=true
+
     ports:
       - "5173:5173"
     networks: 
@@ -23,21 +27,21 @@ services:
     image: containrrr/shepherd
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      # - ~/.docker/config.json:/root/.docker/config.json:ro
-      - ./entrypoint/entrypoint.sh:/entrypoint.sh:ro
     environment:
       - SLEEP_TIME=1m
       - IGNORELIST_SERVICES=shepherd
       - IMAGE_AUTOCLEAN_LIMIT=5
-      - UPDATE_OPTIONS="--update-delay=30s"
       - ROLLBACK_ON_FAILURE=true
-      - FILTER_SERVICES=name=todo_list
       - WITH_REGISTRY_AUTH=true
+      - UPDATE_OPTIONS=--update-delay=30s --force
+      - ROLLBACK_OPTIONS='--rollback-delay=0s'
+      - VERBOSE=true
+      - FILTER_SERVICES=label=com.mydomain.autodeploy
+      - TZ=Asia/Manila
 
-    entrypoint: ["/bin/sh", "-c", "/entrypoint.sh shepherd"]
+    # entrypoint: ["/bin/sh", "-c", "/entrypoint.sh shepherd"]
     secrets:
-      - registry_user
-      - registry_password
+      - shepherd-registries-auth
 
     deploy:
       placement:
