@@ -1,0 +1,47 @@
+version: "3.8"
+
+networks:
+  watchtower_net:
+    driver: overlay
+
+secrets:
+  registry_user:
+    external: true
+  registry_password:
+    external: true
+
+services:
+  todo_list:
+    image: alhon05/todo-app:latest
+    ports:
+      - "5173:5173"
+    networks: 
+      - watchtower_net
+
+  shepherd:
+    build: .
+    image: containrrr/shepherd
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      # - ~/.docker/config.json:/root/.docker/config.json:ro
+      - ./entrypoint/entrypoint.sh:/entrypoint.sh:ro
+    environment:
+      - SLEEP_TIME=1m
+      - IGNORELIST_SERVICES=shepherd
+      - IMAGE_AUTOCLEAN_LIMIT=5
+      - UPDATE_OPTIONS="--update-delay=30s"
+      - ROLLBACK_ON_FAILURE=true
+      - FILTER_SERVICES=name=todo_list
+      - WITH_REGISTRY_AUTH=true
+
+    entrypoint: ["/bin/sh", "-c", "/entrypoint.sh shepherd"]
+    secrets:
+      - registry_user
+      - registry_password
+
+    deploy:
+      placement:
+        constraints:
+          - node.role == manager
+    networks: 
+      - watchtower_net
