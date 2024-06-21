@@ -30,7 +30,7 @@ jobs:
           file: Dockerfile
           push: true
           tags: |
-            172.24.31.39:5000/alhon05/todo-app:lastest
+            172.24.31.39:5000/alhon05/todo-app:latest
             172.24.31.39:5000/alhon05/todo-app:${{ github.ref_name }}-${{ env.GIT_SHA }}
 
       - name: Verify image in local registry
