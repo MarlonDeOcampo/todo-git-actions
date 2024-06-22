@@ -21,6 +21,13 @@ jobs:
       - name: Extract Git Commit SHA
         id: vars
         run: echo "GIT_SHA=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+
+      - name: Login to fb2fn repo
+        uses: docker/login-action@v2
+        with:
+          registry: spark.fb2fn.com
+          username: ${{ secrets.REPO_USERNAME }}
+          password: ${{ secrets.REPO_PASSWORD }}
       
       - name: build and push api
         id: build-push-api
@@ -30,8 +37,6 @@ jobs:
           file: Dockerfile
           push: true
           tags: |
-            172.24.31.39:5000/alhon05/todo-app:latest
-            172.24.31.39:5000/alhon05/todo-app:${{ github.ref_name }}-${{ env.GIT_SHA }}
+            spark.fb2fn.com/todo-app:latest
+            spark.fb2fn.com/todo-app:${{ github.ref_name }}-${{ env.GIT_SHA }}
 
-      - name: Verify image in local registry
-        run: curl http://172.24.31.39:5000/v2/_catalog

@@ -49,3 +49,11 @@
 ```
 
 6. deploy the watchtower stack
+
+
+docker push spark.fb2fn.com/todo-app:latest
+
+docker tag todo-app spark.fb2fn.com/todo-app:latest
+
+docker login spark.fb2fn.com --username admin --password 12345qwert
+

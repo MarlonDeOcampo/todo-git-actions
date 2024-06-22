@@ -3,21 +3,25 @@ version: "3.8"
 networks:
   todo_net:
     driver: overlay
-  registry_registry-net:
+secrets:
+  shepherd-registries-auth:
+    external: true
+  registry_username:
+    external: true
+  registry_password:
     external: true
 
 services:
   todo_list:
-    image: 172.24.31.39:5000/alhon05/todo-app:latest
+    image: spark.fb2fn.com/todo-app:latest
     deploy:
       labels: 
         - shepherd.enable=true
-
+        - shepherd.auth.config=todo
     ports:
       - "5173:5173"
     networks: 
       - todo_net
-      - registry_registry-net
 
   shepherd:
     image: containrrr/shepherd:latest
@@ -28,16 +32,17 @@ services:
       - IGNORELIST_SERVICES=shepherd
       - IMAGE_AUTOCLEAN_LIMIT=5
       - ROLLBACK_ON_FAILURE=true
-      - UPDATE_OPTIONS=--update-delay=30s --force
+      - UPDATE_OPTIONS=--update-delay=30s --force --with-registry-auth
       - ROLLBACK_OPTIONS='--rollback-delay=0s'
-      - VERBOSE=true
       - FILTER_SERVICES=label=shepherd.enable=true
       - TZ=Asia/Manila
-      - WITH_INSECURE_REGISTRY=true
+      - VERBOSE=true
+      - REGISTRY_HOST=spark.fb2fn.com
+      - WITH_REGISTRY_AUTH=true
+      - REGISTRIES_FILE=/var/run/secrets/shepherd-registries-auth
 
-    networks: 
-      - todo_net
-      - registry_registry-net
+    secrets:
+      - shepherd-registries-auth
 
     deploy:
       placement:
