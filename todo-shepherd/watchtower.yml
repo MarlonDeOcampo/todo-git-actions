@@ -23,7 +23,7 @@ services:
     deploy:
       labels: 
         - shepherd.enable=true
-        # - shepherd.auth.config=todo
+        - shepherd.auth.config=todo
     ports:
       - "5173:5173"
     networks: 
@@ -50,7 +50,7 @@ services:
       - VERBOSE=true
       - REGISTRY_HOST=spark.fb2fn.com
       - WITH_REGISTRY_AUTH=true
-      # - REGISTRIES_FILE=/var/run/secrets/shepherd-registries-auth
+      - REGISTRIES_FILE=/var/run/secrets/shepherd-registries-auth
       # - REGISTRY_USER=admin
       # - REGISTRY_PASSWORD=12345qwert
       # --with-registry-auth
