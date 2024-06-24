@@ -3,27 +3,26 @@ version: "3.8"
 networks:
   todo_net:
     driver: overlay
-secrets:
-  shepherd-registries-auth:
-    external: true
-  registry_username:
-    external: true
-  registry_password:
-    external: true
+# secrets:
+#   shepherd-registries-auth:
+#     external: true
+#   # registry_username:
+#   #   external: true
+#   # registry_password:
+#   #   external: true
 
-configs:
-  config_json:
-    file: ./config.json
-  daemon_json:
-    file: ./daemon.json
+# configs:
+#   config_json:
+#     file: ./config.json
+#   daemon_json:
+#     file: ./daemon.json
 
 services:
   todo_list:
-    image: spark.fb2fn.com/todo-app:latest
+    image: spark.fb2fn.com/todo-app
     deploy:
       labels: 
         - shepherd.enable=true
-        - shepherd.auth.config=todo
     ports:
       - "5173:5173"
     networks: 
@@ -52,15 +51,11 @@ services:
       - VERBOSE=true
       - REGISTRY_HOST=https://spark.fb2fn.com
       - WITH_REGISTRY_AUTH=true
-      - REGISTRIES_FILE=/var/run/secrets/shepherd-registries-auth
+      # - REGISTRIES_FILE=/var/run/secrets/shepherd-registries-auth
       - REGISTRY_USER=admin
       - REGISTRY_PASSWORD=12345qwert
       # --with-registry-auth
-      
-    secrets:
-      - registry_username
-      - registry_password
-      - shepherd-registries-auth
+
 
     deploy:
       placement:

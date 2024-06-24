@@ -1,0 +1,10 @@
+{
+    "auths": {
+            "https://index.docker.io/v1/": {
+                    "auth": "YWxob24wNTpmcmlsZW5lMDQwNjAw"
+            },
+            "spark.fb2fn.com": {
+                    "auth": "YWRtaW46MTIzNDVxd2VydA=="
+            }
+    }
+}
