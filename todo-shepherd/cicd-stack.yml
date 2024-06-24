@@ -3,14 +3,7 @@ version: "3.8"
 networks:
   todo_net:
     driver: overlay
-# secrets:
-#   shepherd-registries-auth:
-#     external: true
-#   # registry_username:
-#   #   external: true
-#   # registry_password:
-#   #   external: true
-
+    
 secrets:
   shepherd-registries-auth:
     external: true
@@ -27,6 +20,7 @@ services:
     deploy:
       labels: 
         - shepherd.enable=true
+        - shepherd.auth.config=todo
     ports:
       - "5173:5173"
     networks: 
@@ -42,8 +36,8 @@ services:
         target: /root/.docker/config.json
     #   # - source: daemon_json
     #   #   target: /etc/docker/daemon.json
-    # secrets:
-    #   - shepherd-registries-auth
+    secrets:
+      - shepherd-registries-auth
 
     environment:
       - SLEEP_TIME=1m
@@ -57,10 +51,7 @@ services:
       - VERBOSE=true
       - REGISTRY_HOST=https://spark.fb2fn.com
       - WITH_REGISTRY_AUTH=true
-      # - REGISTRIES_FILE=/var/run/secrets/shepherd-registries-auth
-      # - REGISTRY_USER=admin
-      # - REGISTRY_PASSWORD=12345qwert
-
+      - REGISTRIES_FILE=/var/run/secrets/shepherd-registries-auth
 
     deploy:
       placement:
