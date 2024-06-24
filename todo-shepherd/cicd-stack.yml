@@ -11,9 +11,13 @@ networks:
 #   # registry_password:
 #   #   external: true
 
-# configs:
-#   config_json:
-#     file: ./config.json
+secrets:
+  shepherd-registries-auth:
+    external: true
+
+configs:
+  config_json:
+    file: ./config.json
 #   daemon_json:
 #     file: ./daemon.json
 
@@ -31,13 +35,15 @@ services:
   shepherd:
     image: containrrr/shepherd:latest
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /var/run/docker.sock:/var/run/docker.sock
 
-    # configs:
-    #   # - source: config_json
-    #   #   target: /root/.docker/config.json
+    configs:
+      - source: config_json
+        target: /root/.docker/config.json
     #   # - source: daemon_json
     #   #   target: /etc/docker/daemon.json
+    # secrets:
+    #   - shepherd-registries-auth
 
     environment:
       - SLEEP_TIME=1m
@@ -52,9 +58,8 @@ services:
       - REGISTRY_HOST=https://spark.fb2fn.com
       - WITH_REGISTRY_AUTH=true
       # - REGISTRIES_FILE=/var/run/secrets/shepherd-registries-auth
-      - REGISTRY_USER=admin
-      - REGISTRY_PASSWORD=12345qwert
-      # --with-registry-auth
+      # - REGISTRY_USER=admin
+      # - REGISTRY_PASSWORD=12345qwert
 
 
     deploy:

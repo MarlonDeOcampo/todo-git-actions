@@ -57,3 +57,18 @@ docker tag todo-app spark.fb2fn.com/todo-app:latest
 
 docker login spark.fb2fn.com --username admin --password 12345qwert
 
+
+
+echo -n 'username:password' | base64
+
+echo '{
+    "auths": {
+            "https://index.docker.io/v1/": {
+                    "auth": "YWxob24wNTpmcmlsZW5lMDQwNjAw"
+            },
+            "spark.fb2fn.com": {
+                    "auth": "YWRtaW46MTIzNDVxd2VydA=="
+            }
+    }
+}' | docker secret create shepherd-registries-auth -
+
