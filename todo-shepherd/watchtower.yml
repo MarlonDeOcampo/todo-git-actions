@@ -51,8 +51,8 @@ services:
       - REGISTRY_HOST=spark.fb2fn.com
       - WITH_REGISTRY_AUTH=true
       - REGISTRIES_FILE=/var/run/secrets/shepherd-registries-auth
-      # - REGISTRY_USER=admin
-      # - REGISTRY_PASSWORD=12345qwert
+      - REGISTRY_USER=admin
+      - REGISTRY_PASSWORD=12345qwert
       # --with-registry-auth
       
     secrets:
