@@ -31,14 +31,8 @@ jobs:
         run: |
           echo "${{ secrets.REPO_PASSWORD }}" | docker login 52.77.251.13:5000 -u "${{ secrets.REPO_USERNAME }}" --password-stdin
       
-      - name: build and push api
-        id: build-push-api
-        uses: docker/build-push-action@v3
-        with:
-          context: .
-          file: Dockerfile
-          push: true
-          tags: |
-            52.77.251.13:5000/todo-app:latest
-            52.77.251.13:5000/todo-app:${{ github.ref_name }}-${{ env.GIT_SHA }}
+          - name: Build and push Docker image
+          run: |
+            docker buildx create --use
+            docker buildx build --push --tag 52.77.251.13:5000/todo-app:latest --tag 52.77.251.13:5000/todo-app:${{ github.ref_name }}-${{ env.GIT_SHA }} .
 
