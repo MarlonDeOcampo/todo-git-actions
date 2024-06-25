@@ -30,6 +30,7 @@ jobs:
       - name: Insecure Docker Repository
         run: |
           echo ", \"insecure-registries\": [\"${{ secrets.DOCKER_REGISTRY_DOMAIN }}\"]}" | sudo tee -a /etc/docker/daemon.json
+          systemctl restart docker.service
 
       - name: Login to Docker
         uses: docker/login-action@v3
