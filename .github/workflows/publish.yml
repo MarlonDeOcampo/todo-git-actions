@@ -11,17 +11,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
         with:
           ref: 'dev'
       
       - name: Set up Docker daemon with insecure registry
         run: |
-          sudo truncate -s-2 /etc/docker/daemon.json
-          echo '{"insecure-registries": ["52.77.251.13:5000"]}' | sudo tee -a /etc/docker/daemon.json
+          sudo truncate -s 0 /etc/docker/daemon.json
+          echo '{"insecure-registries": ["52.77.251.13:5000"]}' | sudo tee /etc/docker/daemon.json
           sudo systemctl restart docker
     
-      - name: setup docker buildx
+      - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
       - name: Extract Git Commit SHA
@@ -32,16 +33,7 @@ jobs:
         run: |
           echo "${{ secrets.REPO_PASSWORD }}" | docker login 52.77.251.13:5000 -u "${{ secrets.REPO_USERNAME }}" --password-stdin
       
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
-        with:
-          config-inline: |
-            [registry."52.77.251.13:5000"]
-              http = true
-              insecure = true
-
       - name: Build and push Docker image
         run: |
           docker buildx create --use
           docker buildx build --push --tag 52.77.251.13:5000/todo-app:latest --tag 52.77.251.13:5000/todo-app:${{ github.ref_name }}-${{ env.GIT_SHA }} .
-
