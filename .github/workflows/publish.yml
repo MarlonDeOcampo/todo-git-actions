@@ -11,34 +11,34 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
         with:
           ref: 'dev'
-      
-      - name: Set up Docker daemon with insecure registry
-        run: |
-          sudo truncate -s 0 /etc/docker/daemon.json
-          echo '{"insecure-registries": ["52.77.251.13:5000"]}' | sudo tee /etc/docker/daemon.json
-          sudo systemctl restart docker
     
-      - name: Set up Docker Buildx
+      - name: setup docker buildx
         uses: docker/setup-buildx-action@v2
-        with:
-          config-inline: |
-            [registry."52.77.251.13:5000"]
-              http = true
-              insecure = true
 
       - name: Extract Git Commit SHA
         id: vars
         run: echo "GIT_SHA=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
 
-      - name: Log in to private repo
-        run: |
-          echo "${{ secrets.REPO_PASSWORD }}" | docker login 52.77.251.13:5000 -u "${{ secrets.REPO_USERNAME }}" --password-stdin
+      - name: Login to private repo
+        uses: docker/login-action@v2
+        with:
+          registry: http://52.77.251.13:5000
+          username: ${{ secrets.REPO_USERNAME }}
+          password: ${{ secrets.REPO_PASSWORD }}
       
-      - name: Build and push Docker image
-        run: |
-          docker buildx create --use
-          docker buildx build --push --tag 52.77.251.13:5000/todo-app:latest --tag 52.77.251.13:5000/todo-app:${{ github.ref_name }}-${{ env.GIT_SHA }} .
+      - name: build and push api
+        id: build-push-api
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          file: Dockerfile
+          push: true
+          tags: |
+            52.77.251.13:5000/todo-app:latest
+            52.77.251.13:5000/todo-app:${{ github.ref_name }}-${{ env.GIT_SHA }}
+      
+        
+
