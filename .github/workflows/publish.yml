@@ -23,7 +23,7 @@ jobs:
         run: echo "GIT_SHA=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
 
       - name: Login to private repo
-        run: echo "${{ secrets.REPO_PASSWORD }}" | docker login 52.77.251.13:5000 -u ${{ secrets.REPO_USERNAME }} --password-stdin
+        run: echo "${{ secrets.REPO_PASSWORD }}" | docker login https://52.77.251.13:5000 -u ${{ secrets.REPO_USERNAME }} --password-stdin
       
       - name: build and push api
         id: build-push-api
