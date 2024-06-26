@@ -84,3 +84,5 @@ docker loginl
 docker login 52.77.251.13:5000
 
 - copy the /home/marlon/.docker/config.json
+
+
