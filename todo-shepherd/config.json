@@ -1,7 +1,7 @@
 {
         "auths": {
-                "52.77.251.13:5000": {
-                        "auth": "YWRtaW46MTIzNDVxd2VydA=="
+                "52.221.188.143:5000": {
+                        "auth": "YWRtaW46YWRtaW4xMjM0"
                 }
         }
 }

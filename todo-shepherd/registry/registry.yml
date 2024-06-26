@@ -1,4 +1,4 @@
-version: '3.7'
+version: '3.8'
 
 services:
   registry:
@@ -9,20 +9,23 @@ services:
       replicas: 1
 
     environment:
+      REGISTRY_HTTP_ADDR: "0.0.0.0:5000"
       REGISTRY_AUTH: htpasswd
       REGISTRY_AUTH_HTPASSWD_PATH: /auth/htpasswd
       REGISTRY_AUTH_HTPASSWD_REALM: Registry Realm
       REGISTRY_STORAGE_DELETE_ENABLED: "true"
-      REGISTRY_HTTP_TLS_CERTIFICATE: /certs/domain.crt
-      REGISTRY_HTTP_TLS_KEY: /certs/domain.key
-
+      REGISTRY_HTTP_TLS_CERTIFICATE: "/certs/domain.crt"
+      REGISTRY_HTTP_TLS_KEY: "/certs/domain.key"
+    
     networks:
       - registry_net
 
     volumes:
-      - registry-auth:/auth
-      - registry-certs:/certs
+      - ./auth:/auth
       - registry-data:/var/lib/registry
+      - /etc/docker/certs/domain.crt:/certs/domain.crt
+      - /etc/docker/certs/domain.key:/certs/domain.key
+  
 
 volumes:
   registry-auth:
@@ -32,4 +35,4 @@ volumes:
 networks:
   registry_net:
     driver: overlay
-    name: registry_netdocke
+    name: registry_net

@@ -11,12 +11,12 @@ secrets:
 configs:
   config_json:
     file: ./config.json
-#   daemon_json:
-#     file: ./daemon.json
+  daemon_json:
+    file: ./daemon.json
 
 services:
   todo_list:
-    image: 52.77.251.13:5000/todo-app:latest
+    image: 52.221.188.143:5000/todo-app:latest
     deploy:
       labels: 
         - shepherd.enable=true
@@ -34,8 +34,8 @@ services:
     configs:
       - source: config_json
         target: /root/.docker/config.json
-    #   # - source: daemon_json
-    #   #   target: /etc/docker/daemon.json
+      - source: daemon_json
+        target: /etc/docker/daemon.json
     secrets:
       - shepherd-registries-auth
 
@@ -49,7 +49,7 @@ services:
       - FILTER_SERVICES=label=shepherd.enable=true
       - TZ=Asia/Manila
       - VERBOSE=true
-      - REGISTRY_HOST=52.77.251.13:5000
+      - REGISTRY_HOST=52.221.188.143:5000
       - WITH_REGISTRY_AUTH=true
       - REGISTRIES_FILE=/var/run/secrets/shepherd-registries-auth
 
