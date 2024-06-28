@@ -21,10 +21,14 @@ jobs:
       - name: Set up Docker Buildx
         env:
           DOCKER_CONFIG: ${{ runner.workspace }}/.docker
+          DOCKER_CERT_PATH: ${{ runner.workspace }}/.docker/certs
         run: |
-          echo "${{ secrets.REGISTRY_CERTIFICATE }}" | base64 -d > $DOCKER_CONFIG/ca.pem
-          echo "${{ secrets.REGISTRY_CERTIFICATE }}" | base64 -d > $DOCKER_CONFIG/cert.pem
-          echo "${{ secrets.REGISTRY_KEY }}" | base64 -d > $DOCKER_CONFIG/key.pem
+          mkdir -p $DOCKER_CERT_PATH
+          echo "${{ secrets.REGISTRY_CERTIFICATE }}" > $DOCKER_CERT_PATH/ca.pem
+          echo "${{ secrets.REGISTRY_CERTIFICATE }}" > $DOCKER_CERT_PATH/cert.pem
+          echo "${{ secrets.REGISTRY_KEY }}" > $DOCKER_CERT_PATH/key.pem
+          echo '{"auths":{"registry.52.221.188.143:5000":{"auth":"your_base64_encoded_credentials_here"}}}' > $DOCKER_CONFIG/config.json
+
       - name: Extract Git Commit SHA
         id: vars
         run: echo "GIT_SHA=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
