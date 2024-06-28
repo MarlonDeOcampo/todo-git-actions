@@ -19,23 +19,16 @@ jobs:
         id: vars
         run: echo "GIT_SHA=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
 
+      - name: Configure Docker certificates
+        run: |
+          mkdir -p ~/.docker/tls/${{ secrets.DOCKER_REGISTRY_DOMAIN }}
+          echo "${{ secrets.REGISTRY_CERTIFICATE }}" > ~/.docker/tls/${{ secrets.DOCKER_REGISTRY_DOMAIN }}/cert.crt
+          echo "${{ secrets.REGISTRY_KEY }}" > ~/.docker/tls/${{ secrets.DOCKER_REGISTRY_DOMAIN }}/key.key
+
       - name: Log into Docker registry
         env:
           REGISTRY_SERVER: ${{ secrets.DOCKER_REGISTRY_DOMAIN }}
-        run: |
-          mkdir -p ~/.docker
-          echo "$REGISTRY_CERTIFICATE" > ~/.docker/cert.crt
-          echo "$REGISTRY_KEY" > ~/.docker/cert.key
-          docker login -u ${{ secrets.REPO_USERNAME }} --password-stdin --tlsverify --tlscacert ~/.docker/cert.crt --tlscert ~/.docker/cert.crt --tlskey ~/.docker/cert.key $REGISTRY_SERVER <<<"$REPO_PASSWORD"
-
-      - name: Login to Docker
-        uses: docker/login-action@v3
-        with:
-          registry: ${{ secrets.DOCKER_REGISTRY_DOMAIN }}
-          username: ${{ secrets.REPO_USERNAME }}
-          password: ${{ secrets.REPO_PASSWORD }}
-        env:
-          DOCKER_CLI_ENTRYPPOINT: /bin/sh -c "echo $DOCKER_REGISTRY_CERT > /usr/local/share/ca-certificates/domain.crt && update-ca-certificates && $DOCKER_CLI_ENTRYPOINT"
+        run: echo "${{ secrets.REPO_PASSWORD }}" | docker login $REGISTRY_SERVER -u ${{ secrets.REPO_USERNAME }} --password-stdin
 
       - name: Build and push to Docker Registry
         uses: docker/build-push-action@v5
@@ -43,7 +36,5 @@ jobs:
           context: .
           push: true
           tags: |
-            ${{ secrets.DOCKER_REGISTRY_DOMAIN }}/todo-app"latest
+            ${{ secrets.DOCKER_REGISTRY_DOMAIN }}/todo-app:latest
             ${{ secrets.DOCKER_REGISTRY_DOMAIN }}/todo-app:${{ github.ref_name }}-${{ env.GIT_SHA }}
-      
-     
