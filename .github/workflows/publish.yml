@@ -21,10 +21,13 @@ jobs:
 
       - name: Configure Docker certificates
         run: |
-          mkdir -p ~/.docker/certs.d/${{ secrets.DOCKER_REGISTRY_DOMAIN }}
-          echo "${{ secrets.REGISTRY_CERTIFICATE }}" > ~/.docker/certs.d/${{ secrets.DOCKER_REGISTRY_DOMAIN }}/ca.crt
-          echo "${{ secrets.REGISTRY_CERTIFICATE }}" > ~/.docker/certs.d/${{ secrets.DOCKER_REGISTRY_DOMAIN }}/client.cert
-          echo "${{ secrets.REGISTRY_KEY }}" > ~/.docker/certs.d/${{ secrets.DOCKER_REGISTRY_DOMAIN }}/client.key
+          mkdir -p /home/runner/.docker/certs.d/${{ secrets.DOCKER_REGISTRY_DOMAIN }}
+          echo "${{ secrets.REGISTRY_CERTIFICATE }}" > /home/runner/.docker/certs.d/${{ secrets.DOCKER_REGISTRY_DOMAIN }}/ca.crt
+          echo "${{ secrets.REGISTRY_CERTIFICATE }}" > /home/runner/.docker/certs.d/${{ secrets.DOCKER_REGISTRY_DOMAIN }}/client.cert
+          echo "${{ secrets.REGISTRY_KEY }}" > /home/runner/.docker/certs.d/${{ secrets.DOCKER_REGISTRY_DOMAIN }}/client.key
+          chmod 644 /home/runner/.docker/certs.d/${{ secrets.DOCKER_REGISTRY_DOMAIN }}/ca.crt
+          chmod 644 /home/runner/.docker/certs.d/${{ secrets.DOCKER_REGISTRY_DOMAIN }}/client.cert
+          chmod 600 /home/runner/.docker/certs.d/${{ secrets.DOCKER_REGISTRY_DOMAIN }}/client.key
 
       - name: Log into Docker registry
         env:
