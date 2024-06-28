@@ -21,15 +21,10 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
         with:
-          buildkitd-flags: --tlsverify
-        #   buildkitd-config-inline: |
-        #     [registry."${{ secrets.DOCKER_REGISTRY_DOMAIN }}"]
-        #       http = false
-        #       insecure = false
-              
-      - name: Delay to wait for the container to be ready
-        run: sleep 30
-
+          buildkitd-config-inline: |
+            [registry."${{ secrets.DOCKER_REGISTRY_DOMAIN }}"]
+              http = false
+              insecure = false
       - name: Configure Docker certificates
         run: |
           mkdir -p /home/runner/.docker/certs.d/${{ secrets.DOCKER_REGISTRY_DOMAIN }}
