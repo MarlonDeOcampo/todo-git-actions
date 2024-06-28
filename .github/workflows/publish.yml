@@ -36,6 +36,8 @@ jobs:
           registry: ${{ secrets.DOCKER_REGISTRY_DOMAIN }}
           username: ${{ secrets.REPO_USERNAME }}
           password: ${{ secrets.REPO_PASSWORD }}
+        env:
+          DOCKER_CLI_ENTRYPPOINT: /bin/sh -c "echo $DOCKER_REGISTRY_CERT > /usr/local/share/ca-certificates/domain.crt && update-ca-certificates && $DOCKER_CLI_ENTRYPOINT"
 
       - name: Build and push to Docker Registry
         uses: docker/build-push-action@v5
