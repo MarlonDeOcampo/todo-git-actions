@@ -20,13 +20,13 @@ jobs:
     
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-        # env:
-        #     BUILDER_NODE_0_AUTH_TLS_CACERT: ${{ secrets.REGISTRY_CERTIFICATE }}
-        #     BUILDER_NODE_0_AUTH_TLS_CERT: ${{ secrets.REGISTRY_CERTIFICATE }}
-        #     BUILDER_NODE_0_AUTH_TLS_KEY: ${{ secrets.REGISTRY_KEY }}
+        env:
+            BUILDER_NODE_0_AUTH_TLS_CACERT: ${{ secrets.REGISTRY_CERTIFICATE }}
+            BUILDER_NODE_0_AUTH_TLS_CERT: ${{ secrets.REGISTRY_CERTIFICATE }}
+            BUILDER_NODE_0_AUTH_TLS_KEY: ${{ secrets.REGISTRY_KEY }}
         # with:
         #   buildkitd-config-inline: |
-        #     [registry.${{ secrets.DOCKER_REGISTRY_DOMAIN }}]
+        #     [registry.52.221.188.143:5000]
         #       http = false
         #       insecure = false
 
