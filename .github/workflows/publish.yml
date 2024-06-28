@@ -21,9 +21,13 @@ jobs:
 
       - name: Configure Docker certificates
         run: |
-          mkdir -p ~/.docker/tls/${{ secrets.DOCKER_REGISTRY_DOMAIN }}
-          echo "${{ secrets.REGISTRY_CERTIFICATE }}" > ~/.docker/tls/${{ secrets.DOCKER_REGISTRY_DOMAIN }}/cert.crt
-          echo "${{ secrets.REGISTRY_KEY }}" > ~/.docker/tls/${{ secrets.DOCKER_REGISTRY_DOMAIN }}/key.key
+          mkdir -p /etc/docker/certs.d/${{ secrets.DOCKER_REGISTRY_DOMAIN }}
+          echo "${{ secrets.REGISTRY_CERTIFICATE }}" > /etc/docker/certs.d/${{ secrets.DOCKER_REGISTRY_DOMAIN }}/ca.crt
+          echo "${{ secrets.REGISTRY_CERTIFICATE }}" > /etc/docker/certs.d/${{ secrets.DOCKER_REGISTRY_DOMAIN }}/client.cert
+          echo "${{ secrets.REGISTRY_KEY }}" > /etc/docker/certs.d/${{ secrets.DOCKER_REGISTRY_DOMAIN }}/client.key
+
+      - name: Restart Docker
+        run: sudo systemctl restart docker
 
       - name: Log into Docker registry
         env:
