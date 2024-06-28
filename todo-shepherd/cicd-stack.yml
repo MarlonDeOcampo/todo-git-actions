@@ -7,13 +7,7 @@ networks:
 secrets:
   shepherd-registries-auth:
     external: true
-
-configs:
-  config_json:
-    file: ./config.json
-  daemon_json:
-    file: ./daemon.json
-
+    
 services:
   todo_list:
     image: 52.221.188.143:5000/todo-app:latest
@@ -29,31 +23,35 @@ services:
   shepherd:
     image: containrrr/shepherd:latest
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-
-    configs:
-      - source: config_json
-        target: /root/.docker/config.json
-      - source: daemon_json
-        target: /etc/docker/daemon.json
+      - type: bind
+        source: ./certs
+        target: /etc/docker/certs.d/52.221.188.143:5000
+      - type: bind
+        source: /var/run/docker.sock
+        target: /var/run/docker.sock
+        read_only: true   
     secrets:
       - shepherd-registries-auth
-
     environment:
       - SLEEP_TIME=1m
       - IGNORELIST_SERVICES=shepherd
       - IMAGE_AUTOCLEAN_LIMIT=5
       - ROLLBACK_ON_FAILURE=true
-      - UPDATE_OPTIONS=--update-delay=30s --force --with-registry-auth
+      - UPDATE_OPTIONS=--update-delay=30s --force
+      - REGISTRIES_FILE=/var/run/secrets/shepherd-registries-auth
       - ROLLBACK_OPTIONS='--rollback-delay=0s'
       - FILTER_SERVICES=label=shepherd.enable=true
+      - DOCKER_CERT_PATH=/etc/docker/certs.d/52.221.188.143:5000
+      - DOCKER_TLS_CERTDIR=/etc/docker/certs.d/52.221.188.143:5000
+      - DOCKER_REGISTRY_INSECURE=1
+      - WITH_REGISTRY_AUTH=true
       - TZ=Asia/Manila
       - VERBOSE=true
-      - REGISTRY_HOST=52.221.188.143:5000
-      - WITH_REGISTRY_AUTH=true
-      - REGISTRIES_FILE=/var/run/secrets/shepherd-registries-auth
-
+      
+      
+    networks: 
+      - todo_net
     deploy:
       placement:
         constraints:
-          - node.role == manager
+          - node.hostname == tns-ubu106
