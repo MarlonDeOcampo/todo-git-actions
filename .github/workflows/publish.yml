@@ -21,15 +21,11 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
         env:
-            BUILDER_NODE_0_AUTH_TLS_CACERT: ${{ secrets.REGISTRY_CERTIFICATE }}
-            BUILDER_NODE_0_AUTH_TLS_CERT: ${{ secrets.REGISTRY_CERTIFICATE }}
-            BUILDER_NODE_0_AUTH_TLS_KEY: ${{ secrets.REGISTRY_KEY }}
-        with:
-          buildkitd-config-inline: |
-            [registry.52.221.188.143:5000]
-              http = false
-              insecure = false
-
+          DOCKER_CONFIG: ${{ runner.workspace }}/.docker
+        run: |
+          echo "${{ secrets.REGISTRY_CERTIFICATE }}" | base64 -d > $DOCKER_CONFIG/ca.pem
+          echo "${{ secrets.REGISTRY_CERTIFICATE }}" | base64 -d > $DOCKER_CONFIG/cert.pem
+          echo "${{ secrets.REGISTRY_KEY }}" | base64 -d > $DOCKER_CONFIG/key.pem
       - name: Extract Git Commit SHA
         id: vars
         run: echo "GIT_SHA=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
