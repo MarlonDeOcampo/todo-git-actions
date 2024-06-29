@@ -21,7 +21,7 @@ services:
       - todo_net
 
   shepherd:
-    image: containrrr/shepherd:latest
+    image: containrrr/shepherd:v1.8.0
     volumes:
       - type: bind
         source: ./certs
@@ -36,13 +36,12 @@ services:
       - SLEEP_TIME=1m
       - IGNORELIST_SERVICES=shepherd
       - IMAGE_AUTOCLEAN_LIMIT=5
-      - ROLLBACK_ON_FAILURE=true
-      - UPDATE_OPTIONS=--force
+      - UPDATE_OPTIONS=--update-delay=30s --force
       - REGISTRIES_FILE=/var/run/secrets/shepherd-registries-auth
       - FILTER_SERVICES=label=shepherd.enable=true
       - DOCKER_CERT_PATH=/etc/docker/certs.d/52.221.188.143:5000
       - DOCKER_TLS_CERTDIR=/etc/docker/certs.d/52.221.188.143:5000
-      - DOCKER_REGISTRY_INSECURE=1
+      # - DOCKER_REGISTRY_INSECURE=1
       - WITH_REGISTRY_AUTH=true
       - TZ=Asia/Manila
       - VERBOSE=true
