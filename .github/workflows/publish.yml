@@ -49,7 +49,7 @@ jobs:
           context: .
           push: true
           tags: |
-            ${{ secrets.DOCKER_REGISTRY_DOMAIN }}/todo-app":latest
-            # ${{ secrets.DOCKER_REGISTRY_DOMAIN }}/todo-app:${{ github.ref_name }}-${{ env.GIT_SHA }}
+            52.221.188.143:5000/todo-app:latest
+   
       
      
