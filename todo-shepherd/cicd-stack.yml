@@ -10,7 +10,7 @@ secrets:
     
 services:
   todo_list:
-    image: 52.221.188.143:5000/todo-app:latest
+    image: 52.221.188.143:5000/todo-app
     deploy:
       labels: 
         - shepherd.enable=true
@@ -22,6 +22,9 @@ services:
 
   shepherd:
     image: containrrr/shepherd:v1.8.0
+    deploy:
+      labels: 
+        - shepherd.autodeploy=false
     volumes:
       - type: bind
         source: ./certs
@@ -33,22 +36,17 @@ services:
     secrets:
       - shepherd-registries-auth
     environment:
+      - TZ=Asia/Manila
       - SLEEP_TIME=1m
-      - IGNORELIST_SERVICES=shepherd
       - IMAGE_AUTOCLEAN_LIMIT=5
+      - IGNORELIST_SERVICES=shepherd
+      - FILTER_SERVICES=label=shepherd.enable=true
       - UPDATE_OPTIONS=--update-delay=30s --force
       - REGISTRIES_FILE=/var/run/secrets/shepherd-registries-auth
-      - FILTER_SERVICES=label=shepherd.enable=true
       - DOCKER_CERT_PATH=/etc/docker/certs.d/52.221.188.143:5000
       - DOCKER_TLS_CERTDIR=/etc/docker/certs.d/52.221.188.143:5000
-      # - DOCKER_REGISTRY_INSECURE=1
       - WITH_REGISTRY_AUTH=true
-      - TZ=Asia/Manila
-      - VERBOSE=true
       
-      
-    networks: 
-      - todo_net
     deploy:
       placement:
         constraints:
