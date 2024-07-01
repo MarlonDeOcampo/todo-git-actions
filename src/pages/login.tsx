@@ -44,7 +44,7 @@ const Login: FC = () => {
       </div>
       <div className="w-[22rem] sm:w-[30rem] bg-white px-10 py-14 rounded-2xl flex flex-col gap-y-10">
         <div className="text-center text-3xl font-bold text-tertiary">
-          <p>LOGIN-test8</p>
+          <p>LOGIN-test9</p>
         </div>
         <div className="flex flex-col gap-6">
           <FloatingField
