@@ -1,0 +1,14 @@
+version: "3.8"    
+services:
+  todo_list:
+    image: 5000/todo-app:latest
+    deploy:
+      labels: 
+        - shepherd.enable=true
+        - shepherd.auth.config=todo
+    ports:
+      - "5173:5173"
+    deploy:
+      placement:
+        constraints:
+          - node.hostname == tns-ubu106

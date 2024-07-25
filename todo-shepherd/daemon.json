@@ -1,7 +1,0 @@
-{
-  "tlsverify": true,
-  "tlscacert": "/etc/docker/certs.d/52.221.188.143:5000/ca.pem",
-  "tlscert": "/etc/docker/certs.d/52.221.188.143:5000/client-cert.pem",
-  "tlskey": "/etc/docker/certs.d/52.221.188.143:5000/client-key.pem",
-  "insecure-registries": ["52.221.188.143:5000"]
-}
