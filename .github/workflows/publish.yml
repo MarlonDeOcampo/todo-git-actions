@@ -17,11 +17,11 @@ jobs:
 
       - name: Create certificate and key files
         run: |
-          sudo mkdir -p /etc/docker/certs.d/52.221.188.143:5000
-          echo "${{ secrets.REGISTRY_CERTIFICATE }}" | sudo tee /etc/docker/certs.d/52.221.188.143:5000/ca.crt > /dev/null
-          echo "${{ secrets.REGISTRY_CERTIFICATE }}" | sudo tee /etc/docker/certs.d/52.221.188.143:5000/client.cert > /dev/null
-          echo "${{ secrets.REGISTRY_KEY }}" | sudo tee /etc/docker/certs.d/52.221.188.143:5000/client.key > /dev/null
-          sudo chmod 600 /etc/docker/certs.d/52.221.188.143:5000/client.key
+          sudo mkdir -p /etc/docker/certs.d/52.221.188.143:5001
+          echo "${{ secrets.REGISTRY_CERTIFICATE }}" | sudo tee /etc/docker/certs.d/52.221.188.143:5001/ca.crt > /dev/null
+          echo "${{ secrets.REGISTRY_CERTIFICATE }}" | sudo tee /etc/docker/certs.d/52.221.188.143:5001/client.cert > /dev/null
+          echo "${{ secrets.REGISTRY_KEY }}" | sudo tee /etc/docker/certs.d/52.221.188.143:5001/client.key > /dev/null
+          sudo chmod 600 /etc/docker/certs.d/52.221.188.143:5001/client.key
           
       - name: Restart Docker
         run: |

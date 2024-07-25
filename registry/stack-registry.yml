@@ -4,14 +4,19 @@ services:
   registry:
     image: registry:2.8.1
     ports:
-      - 5000:5000
+      - 5001:5001
     environment:
-      REGISTRY_HTTP_ADDR: 0.0.0.0:5000
-      REGISTRY_HTTP_TLS_CERTIFICATE: /certs/domain.crt
-      REGISTRY_HTTP_TLS_KEY: /certs/domain.key
+      REGISTRY_HTTP_ADDR: 0.0.0.0:5001
+      # REGISTRY_HTTP_TLS_CERTIFICATE: /certs/domain.crt
+      # REGISTRY_HTTP_TLS_KEY: /certs/domain.key
+      REGISTRY_AUTH: htpasswd
+      REGISTRY_AUTH_HTPASSWD_PATH: /auth/htpasswd
+      REGISTRY_AUTH_HTPASSWD_REALM: Registry Realm
+      REGISTRY_STORAGE_DELETE_ENABLED: "true"
     volumes:
       - ./data:/var/lib/registry
-      - ./certs:/certs
+      # - ./certs:/certs
+      - ./auth:/auth
 
   registry-ui:
     image: joxit/docker-registry-ui:latest
@@ -19,7 +24,7 @@ services:
       - 8080:80
     environment:
       REGISTRY_TITLE: My Registry
-      REGISTRY_URL: 52.221.188.143:5000
+      REGISTRY_URL: 52.221.188.143:5001
       REGISTRY_SSL: 'true'
     depends_on:
       - registry

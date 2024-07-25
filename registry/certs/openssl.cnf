@@ -15,10 +15,10 @@ localityName_default       = Manila
 organizationName           = Organization Name (eg, company)
 organizationName_default   = Newstars INC.
 commonName                 = Common Name (e.g. server FQDN or YOUR name)
-commonName_default         = 52.221.188.143   # Use your EC2 instance IP address here
+commonName_default         = 52.221.188.143 
 
 [ req_ext ]
 subjectAltName = @alt_names
 
 [ alt_names ]
-IP.1 =52.221.188.143   # Use your EC2 instance IP address here
+IP.1 =52.221.188.143 
