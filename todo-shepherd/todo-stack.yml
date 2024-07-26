@@ -1,7 +1,7 @@
 version: "3.8"    
 services:
   todo_list:
-    image: 5000/todo-app:latest
+    image: 52.221.188.143:5001/todo-app:latest
     deploy:
       labels: 
         - shepherd.enable=true
